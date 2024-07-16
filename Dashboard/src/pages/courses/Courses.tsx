@@ -1,8 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable1 from "../../components/dataTable1/DataTable1";
 import "./courses.scss";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { courseRows } from "../../data";
 import { GoogleGenerativeAI, GenerateContentResult } from "@google/generative-ai";
 
 // Fetch your API_KEY

@@ -31,12 +31,8 @@ export const menu = [
         url: "/courses",
         icon: "note.svg",
       },
-      {
-        id: 1,
-        title: "Settings",
-        url: "/settings",
-        icon: "setting.svg",
-      }
+      
+  
 
     ],
   },
@@ -209,52 +205,18 @@ export const testRows = [
   {
     id: 1,
     tests: "Test 1",
-    starttime: " 3.00 PM",
-    endtime: " 5.00 PM",
-    submittedon: " 01-09-2024 5.00",
-    status: true,
+    Typedescription: "MCQ",
     type: 1
   },
 
   {
-    id: 2,
+    id : 2,
     tests: "Test 2",
-    starttime: " 3.00 PM",
-    endtime: " 5.00 PM",
-    submittedon: " 01-09-2024 5.00",
-    status: true,
+   Typedescription: "Descriptive",
     type: 2
   },
 
-  {
-    id: 3,
-    tests: "Test 3",
-    starttime: " 3.00 PM",
-    endtime: " 5.00 PM",
-    submittedon: " 01-09-2024 5.00",
-    status: false,
-    type: 1
-  },
-
-  {
-    id: 4,
-    tests: "Test 4",
-    starttime: " 3.00 PM",
-    endtime: " 5.00 PM",
-    submittedon: " 01-09-2024 5.00",
-    status: true,
-    type: 2
-  },
-
-  {
-    id: 5,
-    tests: "Test 5",
-    starttime: " 3.00 PM",
-    endtime: " 5.00 PM",
-    submittedon: " 01-09-2024 5.00",
-    status: false,
-    type: 1
-  },
+    
 ];
 
 export const courseRows = [

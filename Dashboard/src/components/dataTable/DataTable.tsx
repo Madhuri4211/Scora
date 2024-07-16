@@ -16,20 +16,20 @@ type Props = {
 const DataTable = (props: Props) => {
 
 
-  const actionColumn: GridColDef = {
-    field: "evaluate",
-    headerName: "Evaluate",
-    width: 150,
-    renderCell: (params) => {
-      return (
-        <div className="action">
-          <Link to={`/${props.slug}/evaluate/${params.row.id}`}>
-            <img src="/view.svg" alt="" />
-          </Link>
-        </div>
-      );
-    },
-  };
+  // const actionColumn: GridColDef = {
+  //   field: "evaluate",
+  //   headerName: "Evaluate",
+  //   width: 150,
+  //   renderCell: (params) => {
+  //     return (
+  //       <div className="action">
+  //         <Link to={`/${props.slug}/evaluate/${params.row.id}`}>
+  //           <img src="/view.svg" alt="" />
+  //         </Link>
+  //       </div>
+  //     );
+  //   },
+  // };
 
   const typecolumn: GridColDef = {
     field: "type",
@@ -52,7 +52,7 @@ const DataTable = (props: Props) => {
         style={{ overflow: "scroll" , width: "85%"}}
         className="dataGrid"
         rows={props.rows}
-        columns={[...props.columns, typecolumn,actionColumn]}
+        columns={[...props.columns, typecolumn]}
         initialState={{
           pagination: {
             paginationModel: {
@@ -67,12 +67,13 @@ const DataTable = (props: Props) => {
             quickFilterProps: { debounceMs: 500 },
           },
         }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        disableColumnFilter
-        disableDensitySelector
-        disableColumnSelector
+        //pageSizeOptions={[0]}
+        // checkboxSelection
+         disableRowSelectionOnClick
+        // disableColumnFilter
+        // disableDensitySelector
+        // disableColumnSelector
+      
       />
     </div>
   );
