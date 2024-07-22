@@ -1,16 +1,15 @@
 import Home from "./pages/home/Home";
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from "react-router-dom";
 import Tests from "./pages/tests/Tests";
 import Navbar from "./components/navbar/Navbar";
 import Menu from "./components/menu/Menu";
-// import Login from "./pages/login/Login";
 import "./styles/global.scss";
 import Test from "./pages/test/Test";
 import Analytics from "./pages/analytics/Analytics";
 import Courses from "./pages/courses/Courses";
 import DescriptiveQuestions from "./components/alltests/test2";
 import Mcq from "./components/alltests/test1";
-import Settings from "./pages/settings/Settings";
+import Login from "./pages/Login/login";
 import {
   QueryClient,
   QueryClientProvider,
@@ -19,7 +18,16 @@ import {
 
 const queryClient = new QueryClient();
 
+const isAuthenticated = () => {
+  return sessionStorage.getItem("user") !== null;
+};
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" />;
+};
+
 function App() {
+
   const Layout = () => {
     return (
       <div className="main" style={{overflowX: "hidden", height: "100%", width: "100%"}}>
@@ -34,14 +42,18 @@ function App() {
             </QueryClientProvider>
           </div>
         </div>
-      </div>
+        </div>
     );
   };
 
   const router = createBrowserRouter([
     {
+      path: "/login",
+      element: <Login />,
+    },
+    {
       path: "/",
-      element: <Layout />,
+      element: <ProtectedRoute><Layout /></ProtectedRoute>,
       children: [
         {
           path: "/",
@@ -69,18 +81,10 @@ function App() {
         },
         {
           path: "/courses",
-          element: <Courses />
-        },
-        {
-          path: "/settings",
-          element: <Settings />
-        }
+          element: <Courses />,
+        },    
       ],
     },
-    // {
-    //   path: "/login",
-    //   element: <Login />,
-    // },
   ]);
 
   return <RouterProvider router={router} />;

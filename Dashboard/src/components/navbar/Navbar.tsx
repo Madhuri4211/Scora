@@ -7,18 +7,18 @@ const Navbar = () => {
         <span>Scora</span>
       </div>
       <div className="icons">
-        <img src="/search.svg" alt="" className="icon" />
+        {/* <img src="/search.svg" alt="" className="icon" /> */}
         
         
         
         <div className="user">
           <img
-            src="./profile-svgrepo-com.svg"
+            src="./profile.svg"
             alt=""
           />
           <span>User</span>
         </div>
-        <img src="/settings.svg" alt="" className="icon" />
+        {/* <img src="/settings.svg" alt="" className="icon" /> */}
       </div>
     </div>
   );

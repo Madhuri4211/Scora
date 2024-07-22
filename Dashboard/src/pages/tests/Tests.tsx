@@ -6,7 +6,12 @@ import { testRows } from "../../data";
 
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
+  {
+    field: "id",
+    type: "number",
+    headerName: "ID",
+    width: 150,
+  },
   {
     field: "tests",
     type: "string",
@@ -14,29 +19,13 @@ const columns: GridColDef[] = [
     width: 150,
   },
   {
-    field: "starttime",
+    field: "Typedescription",
     type: "string",
-    headerName: "Start time",
+    headerName: "Type",
     width: 150,
   },
-  {
-    field: "endtime",
-    type: "string",
-    headerName: "End time",
-    width: 150,
-  },
-  {
-    field: "submittedon",
-    headerName: "Submitted On",
-    width: 150,
-    type: "string",
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    width: 150,
-    type: "boolean",
-  },
+
+  
 ];
 
 const Users = () => {
