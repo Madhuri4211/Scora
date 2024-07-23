@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import './login.scss';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+const API_URL = 'http://localhost:8000'; // Adjust according to your FastAPI server URL
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -49,14 +52,40 @@ const Login: React.FC = () => {
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      if(email === "scora@gmail.com" && password === "scora@123"){
-        sessionStorage.setItem("user", email);
-        navigate('/');
-      } else {
-        alert("Invalid Credentials");
+      try {
+        if (isLogin) {
+          // Handle login
+          const response = await axios.post(`${API_URL}/login/`, {
+            email,
+            password,
+          });
+
+          if (response.status === 200) {
+            sessionStorage.setItem('user', email);
+            navigate('/');
+          } else {
+            alert('Invalid Credentials');
+          }
+        } else {
+          // Handle signup
+          const response = await axios.post(`${API_URL}/signup/`, {
+            email,
+            password,
+          });
+
+          if (response.status === 200) {
+            alert('Signup successful, please log in');
+            handleLoginClick(); // Switch to login form after successful signup
+          } else {
+            alert('Error signing up');
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred');
       }
     }
   };
@@ -119,9 +148,9 @@ const Login: React.FC = () => {
             </div>
             <div className="signup-link">
               {isLogin ? (
-                <div style={{color: "black"}}>Not a member? <a href="#" onClick={handleSignupClick}>Signup now</a></div>
+                <div style={{ color: 'black' }}>Not a member? <a href="#" onClick={handleSignupClick}>Signup now</a></div>
               ) : (
-                <div style={{color: "black"}}>Already a member? <a href="#" onClick={handleLoginClick}>Login now</a></div>
+                <div style={{ color: 'black' }}>Already a member? <a href="#" onClick={handleLoginClick}>Login now</a></div>
               )}
             </div>
           </form>
