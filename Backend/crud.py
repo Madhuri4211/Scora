@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 import models, schemas
-from uuid import uuid4
 from passlib.context import CryptContext
 import logging  # Import logging module
 
@@ -12,7 +11,7 @@ def get_student_by_email(db: Session, email: str):
 def create_student(db: Session, student: schemas.StudentCreate):
     hashed_password = pwd_context.hash(student.password)
     db_student = models.Student(
-        student_id=str(uuid4()), email=student.email, hashed_password=hashed_password
+        email=student.email, hashed_password=hashed_password
     )
     db.add(db_student)
     try:

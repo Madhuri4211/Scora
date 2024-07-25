@@ -9,7 +9,7 @@ class StudentLogin(BaseModel):
     password: str
 
 class Student(BaseModel):
-    student_id: str
+    student_id: int
     email: EmailStr
 
     class Config:
