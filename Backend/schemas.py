@@ -14,3 +14,9 @@ class Student(BaseModel):
 
     class Config:
         orm_mode = True
+
+class MCQSubmission(BaseModel):
+    Q_id: list[int]
+    Student_answer: list[str]
+    correct_answer: list[str]
+    student_id: int
