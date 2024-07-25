@@ -40,25 +40,38 @@ def login(student: schemas.StudentLogin, db: Session = Depends(get_db)):
     db_student = crud.authenticate_student(db, email=student.email, password=student.password)
     if not db_student:
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"message": "Login successful", "student": db_student}
+    return {
+        "message": "Login successful",
+        "student": {
+            "student_id": db_student.student_id,
+            "email": db_student.email
+        }
+    }
+
+
 
 @app.post("/mcq/")
 async def submit_mcq(submission: schemas.MCQSubmission, db: Session = Depends(get_db)):
-    score = sum([1 for i, answer in enumerate(submission.Student_answer) if answer == submission.correct_answer[i]])
-    
-    mcq_result = models.MCQResult(
-        student_id=submission.student_id,
-        Q_id=submission.Q_id,
-        Student_answer=submission.Student_answer,
-        correct_answer=submission.correct_answer,
-        score=score,
-    )
-    
-    db.add(mcq_result)
-    db.commit()
-    db.refresh(mcq_result)
-    
-    return {"result_id": mcq_result.id, "score": score}
+    try:
+        logging.debug(f"Received submission: {submission}")
+        score = sum([1 for i, answer in enumerate(submission.Student_answer) if answer == submission.correct_answer[i]])
+
+        mcq_result = models.MCQResult(
+            student_id=submission.student_id,
+            Q_id=submission.Q_id,
+            Student_answer=submission.Student_answer,
+            correct_answer=submission.correct_answer,
+            score=score,
+        )
+
+        db.add(mcq_result)
+        db.commit()
+        db.refresh(mcq_result)
+
+        return {"result_id": mcq_result.id, "score": score}
+    except Exception as e:
+        logging.error(f"Error processing MCQ submission: {str(e)}")
+        raise HTTPException(status_code=500, detail="An error occurred while processing your request.")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

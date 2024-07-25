@@ -10,8 +10,9 @@ class Student(Base):
 
 class MCQResult(Base):
     __tablename__ = "mcq_results"
+
     id = Column(Integer, primary_key=True, index=True)
-    student_id = Column(Integer)
+    student_id = Column(Integer, index=True)
     Q_id = Column(ARRAY(Integer))
     Student_answer = Column(ARRAY(String))
     correct_answer = Column(ARRAY(String))

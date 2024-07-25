@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './test1.scss';
@@ -58,33 +58,50 @@ const questions = [
 
 const Mcq = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(new Array(questions.length).fill(null));
+  const [studentId, setStudentId] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedStudentId = localStorage.getItem('student_id');
+    if (storedStudentId) {
+      setStudentId(parseInt(storedStudentId, 10));
+    }
+  }, []);
 
   const handleAnswerSelect = (questionIndex: number, optionIndex: number) => {
     const updatedAnswers = [...selectedAnswers];
     updatedAnswers[questionIndex] = optionIndex;
     setSelectedAnswers(updatedAnswers);
-    console.log('Selected answers:', updatedAnswers);
   };
 
   const handleSubmit = async () => {
+    if (studentId === null) {
+      console.error('Student ID is null, cannot submit MCQ answers.');
+      return;
+    }
+
     const Q_id = questions.map((_, index) => index);
     const Student_answer = selectedAnswers.map((answer, index) => answer !== null ? questions[index].options[answer] : 'Not answered');
     const correct_answer = questions.map((q) => q.options[q.answerIndex]);
-    const student_id = 0;
 
-    const payload = { Q_id, Student_answer, correct_answer, student_id };
-
-    console.log('Payload:', payload);
+    const payload = { Q_id, Student_answer, correct_answer, student_id: studentId };
 
     try {
       const response = await axios.post('http://localhost:8000/mcq/', payload);
       console.log('Response data:', response.data);
       navigate('/');
-    } catch (error: any) {
-      console.error('Error submitting MCQ answers:', error);
-      if (error.response && error.response.data) {
-        console.error('Error details:', error.response.data.detail);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('Error submitting MCQ answers:', error.message);
+        if (error.response) {
+          console.error('Error details:', error.response.data);
+        } else if (error.request) {
+          console.error('No response received:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+      } else {
+        console.error('Unexpected error:', error);
       }
     }
   };

@@ -62,9 +62,10 @@ const Login: React.FC = () => {
             email,
             password,
           });
-
+  
           if (response.status === 200) {
             sessionStorage.setItem('user', email);
+            localStorage.setItem('student_id', response.data.student.student_id); // Save student_id
             navigate('/');
           } else {
             alert('Invalid Credentials');
@@ -75,7 +76,7 @@ const Login: React.FC = () => {
             email,
             password,
           });
-
+  
           if (response.status === 200) {
             alert('Signup successful, please log in');
             handleLoginClick(); // Switch to login form after successful signup
@@ -89,7 +90,7 @@ const Login: React.FC = () => {
       }
     }
   };
-
+  
   return (
     <div className="wrapper">
       <div className="title-text">

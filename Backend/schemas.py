@@ -20,3 +20,6 @@ class MCQSubmission(BaseModel):
     Student_answer: list[str]
     correct_answer: list[str]
     student_id: int
+
+    class Config:
+        orm_mode = True
