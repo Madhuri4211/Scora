@@ -12,3 +12,7 @@ CREATE TABLE student_answers (
     correct_answer TEXT NOT NULL,
     is_correct BOOLEAN NOT NULL
 );
+
+ALTER TABLE mcq_results
+ADD COLUMN correct_count INTEGER,
+ADD COLUMN incorrect_count INTEGER;

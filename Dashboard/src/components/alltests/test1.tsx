@@ -59,6 +59,7 @@ const questions = [
 const Mcq = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(new Array(questions.length).fill(null));
   const [studentId, setStudentId] = useState<number | null>(null);
+  const [result, setResult] = useState<{ score: number, correctCount: number, incorrectCount: number } | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,7 +89,8 @@ const Mcq = () => {
 
     try {
       const response = await axios.post('http://localhost:8000/mcq/', payload);
-      console.log('Response data:', response.data);
+      const { score, correct_count, incorrect_count } = response.data;
+      setResult({ score, correctCount: correct_count, incorrectCount: incorrect_count });
       navigate('/');
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -133,6 +135,14 @@ const Mcq = () => {
       <button className="submit-button" onClick={handleSubmit}>
         Submit Answers
       </button>
+      {result && (
+        <div className="result-container">
+          <h2>Quiz Results</h2>
+          <p>Score: {result.score}</p>
+          <p>Correct Answers: {result.correctCount}</p>
+          <p>Incorrect Answers: {result.incorrectCount}</p>
+        </div>
+      )}
     </div>
   );
 };

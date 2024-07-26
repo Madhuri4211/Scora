@@ -5,6 +5,7 @@ from database import SessionLocal, engine
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import uvicorn
+from typing import List
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -48,13 +49,13 @@ def login(student: schemas.StudentLogin, db: Session = Depends(get_db)):
         }
     }
 
-
-
 @app.post("/mcq/")
 async def submit_mcq(submission: schemas.MCQSubmission, db: Session = Depends(get_db)):
     try:
         logging.debug(f"Received submission: {submission}")
-        score = sum([1 for i, answer in enumerate(submission.Student_answer) if answer == submission.correct_answer[i]])
+        correct_count = sum([1 for i, answer in enumerate(submission.Student_answer) if answer == submission.correct_answer[i]])
+        incorrect_count = len(submission.Student_answer) - correct_count
+        score = correct_count
 
         mcq_result = models.MCQResult(
             student_id=submission.student_id,
@@ -62,13 +63,15 @@ async def submit_mcq(submission: schemas.MCQSubmission, db: Session = Depends(ge
             Student_answer=submission.Student_answer,
             correct_answer=submission.correct_answer,
             score=score,
+            correct_count=correct_count,
+            incorrect_count=incorrect_count
         )
 
         db.add(mcq_result)
         db.commit()
         db.refresh(mcq_result)
 
-        return {"result_id": mcq_result.id, "score": score}
+        return {"result_id": mcq_result.id, "score": score, "correct_count": correct_count, "incorrect_count": incorrect_count}
     except Exception as e:
         logging.error(f"Error processing MCQ submission: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred while processing your request.")

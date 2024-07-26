@@ -17,3 +17,7 @@ class MCQResult(Base):
     Student_answer = Column(ARRAY(String))
     correct_answer = Column(ARRAY(String))
     score = Column(Integer)
+    correct_count = Column(Integer, nullable=False)
+    incorrect_count = Column(Integer, nullable=False)
+
+    
