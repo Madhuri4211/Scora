@@ -75,6 +75,13 @@ async def submit_mcq(submission: schemas.MCQSubmission, db: Session = Depends(ge
     except Exception as e:
         logging.error(f"Error processing MCQ submission: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred while processing your request.")
+    
+@app.get("/mcq/last_result/", response_model=schemas.MCQResult)
+def get_last_mcq_result(db: Session = Depends(get_db)):
+    last_result = db.query(models.MCQResult).order_by(models.MCQResult.id.desc()).first()
+    if not last_result:
+        raise HTTPException(status_code=404, detail="No results found")
+    return last_result
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

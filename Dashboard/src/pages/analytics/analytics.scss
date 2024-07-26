@@ -1,0 +1,33 @@
+.analytics-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #fff; /* Change this to a color that contrasts with your background */
+  }
+
+  .charts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+    .chart {
+      width: 90%; /* Adjust width to ensure it fits within the container */
+      max-width: 600px; /* Add a max-width to prevent it from getting too wide */
+      margin: 20px 0;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background-color: #fff;
+
+      &:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+}

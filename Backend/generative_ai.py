@@ -10,41 +10,6 @@ GOOGLE_API_KEY = "AIzaSyCyq0jbEgSC9C-TykrFFVUK5_wQVhpjnS8"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
-def EvaluateMCQ(data: schemas.MCQData, db: Session) -> Tuple[int, Dict[str, Any]]:
-    score = 0
-    neg = -1
-    pos = 2
-    responses = {"Q_id": [], "score": []}
-    
-    for i in range(len(data.Q_id)):
-        question_id = data.Q_id[i]
-        student_answer = data.Student_answer[i]
-        correct_answer = data.correct_answer[i]
-        
-        if student_answer is None:
-            question_score = 0
-        elif student_answer == correct_answer:
-            question_score = pos
-            score += pos
-        else:
-            question_score = neg
-            score += neg
-        
-        responses["Q_id"].append(question_id)
-        responses["score"].append(question_score)
-        
-        db_mcq_result = MCQResult(
-            question_id=question_id,
-            student_answer=student_answer,
-            correct_answer=correct_answer,
-            score=question_score
-        )
-        db.add(db_mcq_result)
-    
-    db.commit()  # Commit after the loop
-    return score, responses
-
-
 def EvaluateDescriptive(data: List[schemas.DescriptiveData], db: Session):
     Marks = 0
     Responses = {"Q_id": [], "score": []}
