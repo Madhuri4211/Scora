@@ -4,33 +4,52 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, 
 import './analytics.scss';
 
 const Analytics: React.FC = () => {
-    const [data, setData] = useState<any>(null);
+    const [lastResult, setLastResult] = useState<any>(null);
+    const [studentResults, setStudentResults] = useState<any[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchLastResult = async () => {
             try {
                 const response = await axios.get('http://localhost:8000/mcq/last_result/');
-                setData(response.data);
+                setLastResult(response.data);
             } catch (error) {
                 console.error('Error fetching the last MCQ result:', error);
             }
         };
 
-        fetchData();
+        fetchLastResult();
     }, []);
 
-    if (!data) {
+    useEffect(() => {
+        if (lastResult) {
+            const fetchStudentResults = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8000/mcq/results/${lastResult.student_id}`);
+                    setStudentResults(response.data);
+                } catch (error) {
+                    console.error('Error fetching MCQ results for the student:', error);
+                }
+            };
+
+            fetchStudentResults();
+        }
+    }, [lastResult]);
+
+    if (!lastResult) {
         return <div>Loading...</div>;
     }
 
     const chartData = [
-        { name: 'Correct Answers', value: data.correct_count },
-        { name: 'Incorrect Answers', value: data.incorrect_count },
+        { name: 'Correct Answers', value: lastResult.correct_count },
+        { name: 'Incorrect Answers', value: lastResult.incorrect_count },
     ];
 
-    const lineChartData = [
-        { name: 'Latest Attempt', correct: data.correct_count, incorrect: data.incorrect_count },
-    ];
+    const performanceData = studentResults.map((result, index) => ({
+        attempt: index + 1,
+        correct: result.correct_count,
+        incorrect: result.incorrect_count,
+        score: result.score
+    }));
 
     const COLORS = ['#0088FE', '#FF8042'];
 
@@ -76,16 +95,17 @@ const Analytics: React.FC = () => {
                     <LineChart
                         width={500}
                         height={300}
-                        data={lineChartData}
+                        data={performanceData}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="attempt" />
                         <YAxis />
                         <Tooltip />
                         <Legend />
                         <Line type="monotone" dataKey="correct" stroke="#8884d8" />
                         <Line type="monotone" dataKey="incorrect" stroke="#FF8042" />
+                        <Line type="monotone" dataKey="score" stroke="#82ca9d" />
                     </LineChart>
                 </div>
             </div>

@@ -83,5 +83,16 @@ def get_last_mcq_result(db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="No results found")
     return last_result
 
+@app.get("/mcq/results/{student_id}")
+async def get_mcq_results_by_student(student_id: int, db: Session = Depends(get_db)):
+    try:
+        results = db.query(models.MCQResult).filter(models.MCQResult.student_id == student_id).order_by(models.MCQResult.id).all()
+        if not results:
+            raise HTTPException(status_code=404, detail="No results found for the given student_id")
+        return results
+    except Exception as e:
+        logging.error(f"Error fetching MCQ results for student_id {student_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="An error occurred while fetching the data.")
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
