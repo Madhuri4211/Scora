@@ -27,7 +27,9 @@ const DescriptiveQuestions: React.FC = () => {
     answer4: '',
     answer5: '',
   });
+  const [evaluationResults, setEvaluationResults] = useState<any[]>([]);
   const navigate = useNavigate();
+  const studentId = Number(localStorage.getItem('student_id')); // Retrieve student_id from localStorage
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -39,60 +41,38 @@ const DescriptiveQuestions: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+  
+    if (!studentId) {
+      console.error('Student ID is not available.');
+      return;
+    }
+  
     const data = [
-      {
-        question_id: 1,
-        question: questions[0],
-        Student_answer: answers.answer1,
-        marks: 0,
-        student_id: 1 // Replace with dynamic student ID if necessary
-      },
-      {
-        question_id: 2,
-        question: questions[1],
-        Student_answer: answers.answer2,
-        marks: 0,
-        student_id: 1
-      },
-      {
-        question_id: 3,
-        question: questions[2],
-        Student_answer: answers.answer3,
-        marks: 0,
-        student_id: 1
-      },
-      {
-        question_id: 4,
-        question: questions[3],
-        Student_answer: answers.answer4,
-        marks: 0,
-        student_id: 1
-      },
-      {
-        question_id: 5,
-        question: questions[4],
-        Student_answer: answers.answer5,
-        marks: 0,
-        student_id: 1
-      }
+      { question_id: 1, question: questions[0], Student_answer: answers.answer1, marks: 0, student_id: studentId },
+      { question_id: 2, question: questions[1], Student_answer: answers.answer2, marks: 0, student_id: studentId },
+      { question_id: 3, question: questions[2], Student_answer: answers.answer3, marks: 0, student_id: studentId },
+      { question_id: 4, question: questions[3], Student_answer: answers.answer4, marks: 0, student_id: studentId },
+      { question_id: 5, question: questions[4], Student_answer: answers.answer5, marks: 0, student_id: studentId }
     ];
-
+  
     try {
-      await axios.post('http://localhost:8000/descriptive/', data);
+      const response = await axios.post('http://localhost:8000/descriptive/', data);
+      setEvaluationResults(response.data.results);
       navigate('/'); // Redirect to the home page after submission
     } catch (error) {
       console.error('Error submitting answers:', error);
     }
   };
-
+  
   return (
     <div className="app-container">
       <h1 className="quiz-heading">Descriptive Questions</h1>
       <form onSubmit={handleSubmit}>
         {questions.map((question, index) => (
           <div key={index} className="question-container">
-            <label htmlFor={`answer${index + 1}`} className="question-text">{`Question ${index + 1}: ${question}`}</label>
+            <label htmlFor={`answer${index + 1}`} className="question-text">
+              {`Question ${index + 1}: ${question}`}
+            </label>
             <textarea
               id={`answer${index + 1}`}
               name={`answer${index + 1}`}
@@ -105,6 +85,19 @@ const DescriptiveQuestions: React.FC = () => {
         ))}
         <button type="submit" className="submit-button">Submit Answers</button>
       </form>
+
+      {evaluationResults.length > 0 && (
+        <div className="results-container">
+          <h2>Evaluation Results</h2>
+          <ul>
+            {evaluationResults.map((result, index) => (
+              <li key={index}>
+                Question {result.question_id}: {result.score} marks
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

@@ -6,34 +6,40 @@ import schemas
 from models import MCQResult
 
 # Configure the Google Generative AI API key
-GOOGLE_API_KEY = "AIzaSyCyq0jbEgSC9C-TykrFFVUK5_wQVhpjnS8"
+GOOGLE_API_KEY = "AIzaSyDjApCt7r09A0jH82clzVcyuGkEkuF-kno"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
-def EvaluateDescriptive(data: List[schemas.DescriptiveData], db: Session):
-    Marks = 0
-    Responses = {"Q_id": [], "score": []}
+def evaluate_descriptive(data: List[schemas.DescriptiveData], db: Session):
+    marks = 0
+    responses = {"Q_id": [], "score": []}
+    
     for item in data:
-        question = item.question
-        answer = item.Student_answer
-        marks = str(item.marks)
-        response = model.generate_content(f"question: {question} student answer: {answer} evaluate this answer for the above question with student answer and give me marks out of {marks} in numerical format. give me only marks. don't give anything except marks")
-        Responses["Q_id"].append(item.question_id)
-        Responses["score"].append(response.text)
-        Marks += int(response.text)
+        response = model.generate_content(
+            f"Question: {item.question}\nStudent Answer: {item.Student_answer}\n"
+            f"Evaluate the answer and give marks out of {item.marks} in numerical format. Provide only the marks."
+        )
+        
+        try:
+            score = int(response.text.strip())
+        except ValueError:
+            score = 0  # Default to 0 if parsing fails
+
+        responses["Q_id"].append(item.question_id)
+        responses["score"].append(score)
+        marks += score
 
         db_descriptive_result = models.DescriptiveResult(
             question_id=item.question_id,
             student_answer=item.Student_answer,
-            marks=int(response.text),
+            marks=score,
             student_id=item.student_id
         )
         db.add(db_descriptive_result)
         db.commit()
         db.refresh(db_descriptive_result)
 
-    return Marks, Responses
-
+    return marks, responses
 def get_job_recommendations(courses):
     response = model.generate_content(f"Provide 5 job recommendations for the following courses: {', '.join(courses)}")
     recommendations = list(response.text.split('\n'))

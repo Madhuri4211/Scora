@@ -20,4 +20,11 @@ class MCQResult(Base):
     correct_count = Column(Integer, nullable=False)
     incorrect_count = Column(Integer, nullable=False)
 
-    
+class DescriptiveResult(Base):
+    __tablename__ = "descriptive_results"
+
+    id = Column(Integer, primary_key=True, index=True)
+    question_id = Column(Integer, nullable=False, index=True)  # Index for faster lookups
+    student_answer = Column(String, nullable=False)  # Adjust length if needed
+    marks = Column(Integer, nullable=False)
+    student_id = Column(Integer, nullable=False, index=True)  # Index for faster lookups

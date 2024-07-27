@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-import models, schemas, crud
+import models, schemas, crud,generative_ai
 from database import SessionLocal, engine
 from fastapi.middleware.cors import CORSMiddleware
 import logging
@@ -93,6 +93,26 @@ async def get_mcq_results_by_student(student_id: int, db: Session = Depends(get_
     except Exception as e:
         logging.error(f"Error fetching MCQ results for student_id {student_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred while fetching the data.")
+    
+@app.post("/descriptive/")
+def create_descriptive(data: List[schemas.DescriptiveData], db: Session = Depends(get_db)):
+    try:
+        # Log the received data
+        for item in data:
+            print(f"Received answer (length {len(item.Student_answer)}): {item.Student_answer[:100]}...")  # Log part of the answer
+
+        # Evaluate descriptive answers
+        marks, responses = generative_ai.evaluate_descriptive(data, db)
+        
+        # Optionally, log the marks and responses for debugging
+        print(f"Marks: {marks}")
+        print(f"Responses: {responses}")
+
+        return {"message": "Descriptive answers submitted successfully", "results": responses}
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

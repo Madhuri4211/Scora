@@ -37,3 +37,16 @@ class MCQResult(BaseModel):
 
     class Config:
         orm_mode = True
+
+from pydantic import BaseModel, Field
+from typing import Optional
+
+class DescriptiveData(BaseModel):
+    question_id: int
+    question: str
+    Student_answer: str = Field(..., max_length=2000)  # Ensure answer does not exceed 2000 characters
+    marks: int
+    student_id: int
+
+    class Config:
+        orm_mode = True
