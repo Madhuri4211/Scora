@@ -73,7 +73,7 @@ const Analytics: React.FC = () => {
                     </BarChart>
                 </div>
                 <div className="chart">
-                    <PieChart width={500} height={300}>
+                    <PieChart width={700} height={300}>
                         <Pie
                             data={chartData}
                             cx={250}
@@ -91,23 +91,24 @@ const Analytics: React.FC = () => {
                         <Tooltip />
                     </PieChart>
                 </div>
-                <div className="chart">
-                    <LineChart
-                        width={500}
-                        height={300}
-                        data={performanceData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="attempt" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="correct" stroke="#8884d8" />
-                        <Line type="monotone" dataKey="incorrect" stroke="#FF8042" />
-                        <Line type="monotone" dataKey="score" stroke="#82ca9d" />
-                    </LineChart>
-                </div>
+            </div>
+            <h2>Performance Over Time</h2>
+            <div className="chart">
+                <LineChart
+                    width={700}
+                    height={300}
+                    data={performanceData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="attempt" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="correct" stroke="#8884d8" activeDot={{ r: 8 }} />
+                    <Line type="monotone" dataKey="incorrect" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="score" stroke="#ff7300" />
+                </LineChart>
             </div>
         </div>
     );

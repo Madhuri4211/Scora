@@ -29,7 +29,7 @@ const columns: GridColDef[] = [
 ];
 
 const Users = () => {
-  const [open, setOpen] = useState(false);
+  const [] = useState(false);
 
   return (
     <div className="users" style={{overflow:"hidden"}}>

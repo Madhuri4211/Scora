@@ -1,9 +1,7 @@
 import google.generativeai as genai
 from sqlalchemy.orm import Session
-import models
 from typing import List, Tuple, Dict, Any
 import schemas
-from models import MCQResult
 
 # Configure the Google Generative AI API key
 GOOGLE_API_KEY = "AIzaSyDjApCt7r09A0jH82clzVcyuGkEkuF-kno"
@@ -29,7 +27,7 @@ def evaluate_descriptive(data: List[schemas.DescriptiveData], db: Session):
         responses["score"].append(score)
         marks += score
 
-        db_descriptive_result = models.DescriptiveResult(
+        db_descriptive_result = DescriptiveResult(
             question_id=item.question_id,
             student_answer=item.Student_answer,
             marks=score,

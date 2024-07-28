@@ -1,18 +1,36 @@
+-- Create student table
 CREATE TABLE student (
     student_id SERIAL PRIMARY KEY,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    hashed_password VARCHAR(100) NOT NULL
+    email VARCHAR NOT NULL UNIQUE,
+    hashed_password VARCHAR NOT NULL
 );
 
-CREATE TABLE student_answers (
+CREATE INDEX ix_student_email ON student (email);
+
+-- Create mcq_results table
+CREATE TABLE mcq_results (
     id SERIAL PRIMARY KEY,
-    student_id INTEGER NOT NULL REFERENCES student(student_id),
-    question_id INTEGER NOT NULL REFERENCES questions(id),
-    student_answer TEXT NOT NULL,
-    correct_answer TEXT NOT NULL,
-    is_correct BOOLEAN NOT NULL
+    student_id INTEGER,
+    Q_id INTEGER[],
+    Student_answer VARCHAR[],
+    correct_answer VARCHAR[],
+    score INTEGER,
+    correct_count INTEGER NOT NULL,
+    incorrect_count INTEGER NOT NULL,
+    CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES student (student_id)
 );
 
-ALTER TABLE mcq_results
-ADD COLUMN correct_count INTEGER,
-ADD COLUMN incorrect_count INTEGER;
+CREATE INDEX ix_mcq_results_student_id ON mcq_results (student_id);
+
+-- Create descriptive_results table
+CREATE TABLE descriptive_results (
+    id SERIAL PRIMARY KEY,
+    question_id INTEGER NOT NULL,
+    student_answer TEXT NOT NULL,
+    marks INTEGER NOT NULL,
+    student_id INTEGER NOT NULL,
+    CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES student (student_id)
+);
+
+CREATE INDEX ix_descriptive_results_student_id ON descriptive_results (student_id);
+CREATE INDEX ix_descriptive_results_question_id ON descriptive_results (question_id);

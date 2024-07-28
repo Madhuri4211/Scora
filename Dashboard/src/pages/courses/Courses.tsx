@@ -1,4 +1,3 @@
-import { GridColDef } from "@mui/x-data-grid";
 import "./courses.scss";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { GoogleGenerativeAI, GenerateContentResult } from "@google/generative-ai";
@@ -11,15 +10,6 @@ const genAI = new GoogleGenerativeAI(API_KEY);
 
 // The Gemini 1.5 models are versatile and work with most use cases
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-// Define the columns for the DataGrid
-const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
-  { field: "coursename", type: "string", headerName: "Course Name", width: 150 },
-  { field: "starttime", type: "string", headerName: "Start Date", width: 150 },
-  { field: "endtime", type: "string", headerName: "End Date", width: 150 },
-  { field: "duration", headerName: "Duration", width: 150, type: "string" },
-];
 
 // Define types for function parameters and return values
 async function generateContent(prompt: string): Promise<string> {
