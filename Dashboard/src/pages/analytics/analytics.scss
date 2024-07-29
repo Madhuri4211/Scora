@@ -21,13 +21,17 @@
 
     .chart {
       width: 100%;
-      max-width: 600px;
-      margin: 20px 0;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      max-width:600px;
+      margin: 25px 0;
+      padding: 25px;
+      box-shadow: 0 4px 8px black;
+      border-radius: 10px;
       background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
+    
 
     .small-chart {
       width: 100%;
@@ -37,6 +41,9 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

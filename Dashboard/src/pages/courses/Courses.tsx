@@ -69,14 +69,17 @@ const Courses = () => {
   return (
     <div className="Courses" style={{ overflow: "hidden" }}>
       <div className="info">
-        <h1>Courses</h1>
+        
+        
         <form onSubmit={handleSubmit}>
+          
           <input
             type="text"
             value={inputCourses}
             onChange={handleInputChange}
             placeholder="Enter skills or courses, separated by commas"
           />
+          
           <button type="submit">Submit</button>
         </form>
       </div>
