@@ -5,19 +5,21 @@
   margin: 20px;
   padding: 20px;
   border-radius: 8px;
+  height: 450px;
+  width: 900px;
 
   .info {
     display: flex;
     align-items: center; // Align items horizontally
     gap: 10px; // Space between input and button
     margin-bottom: 20px;
+    width: 100%; // Make the info section take the full width
 
     input {
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
-      width: 100%;
-      max-width: 400px; // Limit input width
+      flex-grow: 1; // Allow input to take up remaining space
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       font-size: 16px;
     }
@@ -31,8 +33,8 @@
       height: 40px; // Adjust button height
       width: auto; // Allow button to size naturally
       font-size: 16px;
+      margin-left: 10px;
       transition: background-color 0.3s ease; // Smooth transition for hover effect
-      margin-left: 10px; // Space between input and button
 
       &:hover {
         background-color: rgb(190, 190, 193); // Darker color on hover
@@ -49,6 +51,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 
     .box {
       border: 1px solid #ccc;
@@ -57,7 +60,10 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       background-color: hsl(0, 30%, 95%);
       color: black;
-      max-height: 60px;
+      display: flex;
+      align-items: center; // Align items horizontally
+      justify-content: center; // Center content horizontally
+      font-size: 18px; // Increase font size
 
       h2 {
         margin-top: 0;
