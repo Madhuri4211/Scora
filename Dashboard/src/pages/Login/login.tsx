@@ -66,7 +66,7 @@ const Login: React.FC = () => {
           if (response.status === 200) {
             sessionStorage.setItem('user', email);
             localStorage.setItem('student_id', response.data.student.student_id); // Save student_id
-            navigate('/');
+            navigate('/tests');
           } else {
             alert('Invalid Credentials');
           }
