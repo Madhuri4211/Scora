@@ -4,7 +4,9 @@ from sqlalchemy.orm import sessionmaker, Session
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 import uvicorn
-import schemas, crud
+import schemas, crud,generative_ai,database
+from typing import List
+from generative_ai import evaluate_answer_with_ai
 
 DATABASE_URL = "postgresql://postgres:system@localhost/Scora"
 
@@ -107,5 +109,68 @@ async def get_mcq_results_by_student(student_id: int, db: Session = Depends(get_
         logging.error(f"Error fetching MCQ results for student_id {student_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="An error occurred while fetching the data.")
 
+@app.post("/descriptive/")
+async def submit_descriptive_answers(data: List[dict]):
+    conn = database.get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        marks = 0
+        responses = {"question_id": [], "score": []}
+
+        for item in data:
+            question_id = item['question_id']
+            question = item['question']
+            student_answer = item['Student_answer']
+            marks_possible = item['marks']
+            student_id = item['student_id']
+
+            # Use the function from generative_ai.py
+            score = evaluate_answer_with_ai(question, student_answer, marks_possible)
+
+            responses["question_id"].append(question_id)
+            responses["score"].append(score)
+            marks += score
+
+            cursor.execute("""
+                INSERT INTO descriptive_results (student_id, question_id, student_answer, marks)
+                VALUES (%s, %s, %s, %s)
+            """, (student_id, question_id, student_answer, score))
+
+        conn.commit()
+        return {"results": responses}
+
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail="Error in evaluation")
+
+    finally:
+        cursor.close()
+        conn.close()
+    
+@app.get("/descriptive/last_results/")
+async def get_last_five_results():
+    db = SessionLocal()
+    try:
+        query = text("""
+            SELECT * FROM descriptive_results
+            ORDER BY id DESC
+            LIMIT 5
+        """)
+        results = db.execute(query).fetchall()
+        # Convert to list of dictionaries
+        result_list = [dict(row) for row in results]
+        return result_list
+    finally:
+        db.close()
+
+@app.get("/descriptive_results", response_model=List[schemas.DescriptiveResult])
+def get_last_5_results():
+    with SessionLocal() as session:
+        results = session.execute(
+            text("SELECT question_id, student_answer, marks, student_id FROM descriptive_results ORDER BY id DESC LIMIT 5")
+        ).fetchall()
+        return [{"question_id": row.question_id, "student_answer": row.student_answer, "marks": row.marks, "student_id": row.student_id} for row in results]
+    
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

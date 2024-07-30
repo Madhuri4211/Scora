@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import List
+from pydantic import BaseModel, EmailStr, Field
+from typing import List,Optional
 
 class StudentCreate(BaseModel):
     email: EmailStr
@@ -38,9 +38,6 @@ class MCQResult(BaseModel):
     class Config:
         orm_mode = True
 
-from pydantic import BaseModel, Field
-from typing import Optional
-
 class DescriptiveData(BaseModel):
     question_id: int
     question: str
@@ -50,3 +47,13 @@ class DescriptiveData(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class DescriptiveDataList(BaseModel):
+    data: List[DescriptiveData]
+
+class DescriptiveResult(BaseModel):
+    question_id: int
+    student_answer: str
+    marks: int
+    student_id: int

@@ -4,7 +4,6 @@
   align-items: center;
   margin: 20px;
   padding: 20px;
-  background-color: #222;
   border-radius: 8px;
 
   h2 {
@@ -21,7 +20,7 @@
 
     .chart {
       width: 100%;
-      max-width:600px;
+      max-width: 600px;
       margin: 25px 0;
       padding: 25px;
       box-shadow: 0 4px 8px black;
@@ -32,11 +31,10 @@
       align-items: center;
     }
     
-
     .small-chart {
       width: 100%;
-      max-width: 500px; /* Adjust this value to make the chart more compact */
-      height: 200px; /* Adjust the height to fit your design */
+      max-width: 500px;
+      height: 200px;
       padding: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 8px;

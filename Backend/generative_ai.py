@@ -1,43 +1,30 @@
 import google.generativeai as genai
 from sqlalchemy.orm import Session
-from typing import List, Tuple, Dict, Any
+from typing import List, Dict, Any
 import schemas
 
-# Configure the Google Generative AI API key
 GOOGLE_API_KEY = "AIzaSyDjApCt7r09A0jH82clzVcyuGkEkuF-kno"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-pro')
 
-def evaluate_descriptive(data: List[schemas.DescriptiveData], db: Session):
-    marks = 0
-    responses = {"Q_id": [], "score": []}
-    
-    for item in data:
-        response = model.generate_content(
-            f"Question: {item.question}\nStudent Answer: {item.Student_answer}\n"
-            f"Evaluate the answer and give marks out of {item.marks} in numerical format. Provide only the marks."
+def evaluate_answer_with_ai(question: str, answer: str, marks_possible: int) -> int:
+    try:
+        prompt = (
+            f"Question: {question}\n"
+            f"Student Answer: {answer}\n"
+            f"Evaluate the answer and give marks out of {marks_possible} in numerical format. "
+            f"Provide only the marks."
         )
         
-        try:
-            score = int(response.text.strip())
-        except ValueError:
-            score = 0  # Default to 0 if parsing fails
+        response = model.generate_content(prompt)
+        print("API Response:", response.text)  # Debugging line
+        score = int(response.text.strip())
+        return score
 
-        responses["Q_id"].append(item.question_id)
-        responses["score"].append(score)
-        marks += score
+    except Exception as e:
+        print(f"Error evaluating answer with AI: {e}")
+        return 0
 
-        db_descriptive_result = DescriptiveResult(
-            question_id=item.question_id,
-            student_answer=item.Student_answer,
-            marks=score,
-            student_id=item.student_id
-        )
-        db.add(db_descriptive_result)
-        db.commit()
-        db.refresh(db_descriptive_result)
-
-    return marks, responses
 def get_job_recommendations(courses):
     response = model.generate_content(f"Provide 5 job recommendations for the following courses: {', '.join(courses)}")
     recommendations = list(response.text.split('\n'))

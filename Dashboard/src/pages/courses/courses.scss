@@ -4,13 +4,12 @@
   align-items: center;
   margin: 20px;
   padding: 20px;
-  // background-color: #222;
   border-radius: 8px;
+
   .info {
     display: flex;
-    flex-direction: column; // Stack input and button vertically
-    align-items: center; // Center items horizontally
-    gap: 10px; // Space between elements
+    align-items: center; // Align items horizontally
+    gap: 10px; // Space between input and button
     margin-bottom: 20px;
 
     input {
@@ -26,15 +25,14 @@
     button {
       padding: 10px 20px;
       cursor: pointer;
-      background-color: red;
+      background-color: rgb(110, 235, 110);
       border: none; // Remove default border
       border-radius: 5px;
       height: 40px; // Adjust button height
-      width: 100%;
-      max-width: 400px; // Match input width
+      width: auto; // Allow button to size naturally
       font-size: 16px;
       transition: background-color 0.3s ease; // Smooth transition for hover effect
-      margin-top: 10px; // Add margin between input and button
+      margin-left: 10px; // Space between input and button
 
       &:hover {
         background-color: rgb(190, 190, 193); // Darker color on hover
@@ -59,6 +57,7 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       background-color: hsl(0, 30%, 95%);
       color: black;
+      max-height: 60px;
 
       h2 {
         margin-top: 0;

@@ -31,7 +31,7 @@ async function generateContent(prompt: string): Promise<string> {
 }
 
 async function getJobRecommendations(courses: string[]): Promise<string[]> {
-  const response = await generateContent(`Provide 5 job recommendations for the following courses: ${courses.join(', ')}. dont give anything in bold font.`);
+  const response = await generateContent(`Provide 5 job recommendations for the following courses: ${courses.join(', ')}. Don't give anything in bold font.`);
   if (response) {
     const recommendations = response.split('\n');
     return recommendations.filter(recommendation => recommendation.trim() !== "");
@@ -40,7 +40,7 @@ async function getJobRecommendations(courses: string[]): Promise<string[]> {
 }
 
 async function getCourseRecommendations(courses: string[]): Promise<string[]> {
-  const response = await generateContent(`Provide 5 relevant course recommendations for the following courses: ${courses.join(', ')}. dont give anything in bold font.`);
+  const response = await generateContent(`Provide 5 relevant course recommendations for the following courses: ${courses.join(', ')}. Don't give anything in bold font.`);
   if (response) {
     const recommendations = response.split('\n');
     return recommendations.filter(recommendation => recommendation.trim() !== "");
@@ -67,19 +67,15 @@ const Courses = () => {
   };
 
   return (
-    <div className="Courses" style={{ overflow: "hidden" }}>
+    <div className="Courses">
       <div className="info">
-        
-        
         <form onSubmit={handleSubmit}>
-          
           <input
             type="text"
             value={inputCourses}
             onChange={handleInputChange}
-            placeholder="Enter skills or courses, separated by commas"
+            placeholder="Enter skills or courses"
           />
-          
           <button type="submit">Submit</button>
         </form>
       </div>
