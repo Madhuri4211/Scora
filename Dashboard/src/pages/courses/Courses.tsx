@@ -69,6 +69,7 @@ const Courses = () => {
   return (
     <div className="Courses">
       <div className="info">
+        <h1>Courses</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

@@ -55,12 +55,12 @@ function App() {
         </ProtectedRoute>
       ),
       children: [
-        // {
-        //   path: '/',
-        //   element: <Home />,
-        // },
         {
           path: '/',
+          element: <Home />,
+        },
+        {
+          path: '/tests',
           element: <Tests />,
         },
         {
